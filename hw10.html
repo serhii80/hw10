@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hw10</title>
+</head>
+<style>
+    #notif {
+        position: absolute;
+        width: 200px;
+        height: 98vh;
+        top: 15px;
+        right: 15px;
+    }
+    .mymessage{
+        position: relative;
+        display: block;
+        width: 170px;
+        font-size: 16px;
+        color: rgb(0, 0, 0);
+        background: rgba(0, 230, 96, 0.26);
+        border: rgb(0, 230, 96, 0.8);
+        padding: 10px 15px;
+        margin: 5px 10px;
+        border-radius: 5px;
+        animation: fade-in 1s linear;
+    }
+    .mymessage input[type=button] {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        background-color: rgba(0, 0, 0, 0);
+        color: rgb(0, 0, 0);
+        border: none;
+        text-decoration: none;
+    }
+    @keyframes
+    fade-in {
+        0% { 
+            opacity: 0.1; 
+            }
+        100% {
+            opacity: 1;
+            }   
+        }
+</style>
+<body>
+    <fieldset>
+        <legend>Задание 1а в двух вариантах</legend>
+        <input type="button" onclick="printNumbersT(1, 5)" value="Вариант на setTimeout от 1 до 5">
+        <input type="button" onclick="printNumbersI(6, 10)" value="Вариант на setInterval от 6 до 10">
+        <p>*Весело получается, если нажать кнопки одну за другой сразу :)</p>
+    </fieldset>
+    <br>
+    <fieldset>
+        <legend>Задание 1b</legend>
+        <input type="button" onclick="count(1, 20)" value="В консоль от 1 до 20 с задержкой 100мс">
+    </fieldset>
+    <br>
+    <fieldset>
+        <legend>Задание 1c с дополнениями</legend>
+        <label for="msgTxt">Вводим текст сообщения</label>
+        <input type="text" name="msgTxt" id="msgTxt" value="Проба">
+        <br>
+        <label for="tOut">Значение показа сообщения в миллисекундах (от 1 до 30 000)</label>
+        <input type="number" name="tOut" id="tOut" min="1" max="30000" value="5000">
+        <br>
+        <input type="button" onclick="notify(msgTxt.value, tOut.value)" value="Вызов сообщения">
+    </fieldset>
+    <notification id="notif"></notification>
+
+</body>
+<script>
+//-------------------------задание 1a (вариант 1)----------------------
+function printNumbersT(start, end) {
+  setTimeout(function countInterval() {
+      //блок кода для вставки в BODY
+      let p = document.createElement('p');
+      let date = new Date();
+      p.innerHTML = `<p>${start} – замеряем время: ${date}</p>`;
+      document.body.append(p);
+      //конец вставки в BODY
+      if (start < end) {
+      setTimeout(countInterval, 1000);
+    }
+    start++;
+  }, 0);
+}
+//-------------------------задание 1a (вариант 2)----------------------
+function printNumbersI(start, end) {
+    let intervalId = setInterval( () => {
+        //блок кода для вставки в BODY
+        let p = document.createElement('p');
+        let date = new Date();
+        p.innerHTML = `<p>${start} – замеряем время: ${date}</p>`;
+        document.body.append(p);
+        //конец вставки в BODY    
+      if (start == end) {
+      clearInterval(intervalId);
+    }
+    start++;
+  }, 1000);
+}
+//-------------------------задание 1b----------------------
+function count(start, end) {
+    let startTime = new Date();
+    let intervalId = setInterval( () => {
+        console.log(start);
+      if (start == end) {
+      clearInterval(intervalId)
+      let endTime = new Date();
+      console.log("Итого прошло " + (endTime - startTime) + "мс");;
+    }
+    start++;
+  }, 100);
+}
+//-------------------------задание 1c----------------------
+function notify(m, t) {
+    if (t < 1) {
+        tOut.value = 1;
+        t = 1;
+        };
+    if (t > 30000) {
+        tOut.value = 30000;
+        t = 30000;
+        };
+    let flyMessage = document.createElement('flyM');
+    flyMessage.className = "mymessage";
+    flyMessage.innerHTML = m + ' ' + '<input type="button" onclick="parentNode.remove()" value="X">';
+    notif.prepend(flyMessage);
+    setTimeout(() => flyMessage.remove(), t);
+}
+</script>
+</html>
